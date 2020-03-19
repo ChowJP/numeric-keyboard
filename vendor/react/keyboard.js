@@ -11,11 +11,20 @@ export class NumericKeyboard extends Parent {
   constructor(props) {
     super(props)
     this.init(props)
+    this.touched = false
   }
 
   onTouchend(key, event) {
+    this.touched = true
     super.onTouchend(key, event)
     event.nativeEvent.stopImmediatePropagation()
+  }
+
+  onClick(key, event) {
+    if (!this.touched)
+      this.onTouchend(key, event)
+
+    this.touched = false
   }
 
   dispatch(event, payload) {
@@ -39,7 +48,8 @@ export class NumericKeyboard extends Parent {
                   data-key={c.key}
                   data-icon={c.key === ENTER ? this.kp.entertext : c.key}
                   className="numeric-keyboard-key"
-                  onTouchEnd={e => this.onTouchend(c.key, e)} >
+                  onTouchEnd={e => this.onTouchend(c.key, e)}
+                  onClick={e => this.onClick(c.key, e)} >
                 </td>
               )}
             </tr>
